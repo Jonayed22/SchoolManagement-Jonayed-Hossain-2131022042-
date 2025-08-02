@@ -27,10 +27,9 @@ class AdminDashboard {
     }
 }
 
-// --- Factory Class ---
 class DashboardFactory {
     public static function createDashboard($role, $conn) {
-        // Only admin role can get AdminDashboard instance
+    
         if ($role === 'admin') {
             $dashboard = new AdminDashboard($conn);
             $dashboard->loadData();
@@ -42,13 +41,11 @@ class DashboardFactory {
     }
 }
 
-// Check session and role before proceeding
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: login.php');
     exit();
 }
 
-// Create dashboard via Factory
 $dashboard = DashboardFactory::createDashboard($_SESSION['role'], $conn);
 $data = $dashboard->getData();
 
