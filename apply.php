@@ -1,7 +1,7 @@
 <?php
 require_once 'DbConnectionSingleton.php';
 
-// Get database connection using Singleton
+
 $db = DbConnectionSingleton::getInstance()->getConnection();
 
 $message = '';
