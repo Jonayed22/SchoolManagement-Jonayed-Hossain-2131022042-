@@ -7,14 +7,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// -------------------- Decorator Pattern Setup --------------------
 
-// Step 1: Component Interface
+
 interface ExamCreator {
     public function create($name, $class_id, $section_id, $exam_date, $total_marks);
 }
 
-// Step 2: ConcreteComponent - Base exam creation logic
 class BaseExamCreator implements ExamCreator {
     protected $conn;
 
@@ -32,7 +30,6 @@ class BaseExamCreator implements ExamCreator {
     }
 }
 
-// Step 3: Abstract Decorator
 abstract class ExamDecorator implements ExamCreator {
     protected $examCreator;
 
@@ -45,7 +42,6 @@ abstract class ExamDecorator implements ExamCreator {
     }
 }
 
-// Step 4: ConcreteDecorator - Logging
 class LoggingExamDecorator extends ExamDecorator {
     public function create($name, $class_id, $section_id, $exam_date, $total_marks) {
         parent::create($name, $class_id, $section_id, $exam_date, $total_marks);
@@ -54,9 +50,7 @@ class LoggingExamDecorator extends ExamDecorator {
     }
 }
 
-// -------------------- End Decorator Setup --------------------
 
-// Fetch class and section data
 $classes = $conn->query("SELECT * FROM classes");
 $sections = $conn->query("SELECT * FROM sections");
 
@@ -68,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $exam_date = $_POST['exam_date'];
     $total_marks = $_POST['total_marks'];
 
-    // Apply Decorator Pattern
+
     $creator = new LoggingExamDecorator(new BaseExamCreator($conn));
     $creator->create($name, $class_id, $section_id, $exam_date, $total_marks);
 
