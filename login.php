@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $user['role'];
             $_SESSION['email'] = $user['email'];
 
-            // Redirect based on role
             if ($user['role'] === 'admin') {
                 header("Location: admin.php");
                 exit();
