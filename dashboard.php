@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 
-// Count data from DB
+
 $total_students = $conn->query("SELECT COUNT(*) AS count FROM students")->fetch_assoc()['count'];
 $total_teachers = $conn->query("SELECT COUNT(*) AS count FROM teachers")->fetch_assoc()['count'];
 $total_classes = $conn->query("SELECT COUNT(*) AS count FROM classes")->fetch_assoc()['count'];
