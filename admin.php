@@ -6,7 +6,7 @@ header("Expires: 0");
 
 include 'connection.php';
 
-// --- Admin Dashboard Class ---
+
 class AdminDashboard {
     private $conn;
     public $data = [];
