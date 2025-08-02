@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 
-// Show all errors for debugging
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -17,7 +17,7 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Approve application
+    
     if (isset($_POST['approve_id'])) {
         $app_id = intval($_POST['approve_id']);
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $email = $app['email'];
 
-            // Check duplicate student email
+        
             $stmt_check = $conn->prepare("SELECT id FROM students WHERE email = ?");
             if (!$stmt_check) throw new Exception("Prepare failed: " . $conn->error);
             $stmt_check->bind_param("s", $email);
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $username = strtolower(str_replace(' ', '', $app['full_name'])) . rand(100, 999);
-            $password = '1234'; // In production use password_hash()
+            $password = '1234';
             $role = 'student';
 
             $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Decline application
+
     if (isset($_POST['decline_id'])) {
         $app_id = intval($_POST['decline_id']);
 
