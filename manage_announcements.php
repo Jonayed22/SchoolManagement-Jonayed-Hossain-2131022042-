@@ -2,12 +2,10 @@
 session_start();
 include 'connection.php';
 
-// --- Observer Interface ---
 interface Observer {
     public function update($event, $data);
 }
 
-// --- Concrete Observer: Logger ---
 class Logger implements Observer {
     public function update($event, $data) {
         $logMessage = "[" . date('Y-m-d H:i:s') . "] Event: $event";
@@ -19,7 +17,7 @@ class Logger implements Observer {
     }
 }
 
-// --- Subject (Observable) ---
+
 class AnnouncementSubject {
     private $observers = [];
     private $conn;
@@ -28,19 +26,19 @@ class AnnouncementSubject {
         $this->conn = $conn;
     }
 
-    // Attach observer
+
     public function attach(Observer $observer) {
         $this->observers[] = $observer;
     }
 
-    // Notify all observers about an event
+    
     private function notify($event, $data) {
         foreach ($this->observers as $observer) {
             $observer->update($event, $data);
         }
     }
 
-    // Add announcement and notify observers
+
     public function addAnnouncement($title, $message, $created_by) {
         $stmt = $this->conn->prepare("INSERT INTO announcements (title, message, created_by) VALUES (?, ?, ?)");
         $stmt->bind_param('ssi', $title, $message, $created_by);
@@ -50,7 +48,7 @@ class AnnouncementSubject {
         $this->notify('Announcement Added', ['title' => $title, 'message' => $message]);
     }
 
-    // Update announcement and notify observers
+
     public function updateAnnouncement($id, $title, $message) {
         $stmt = $this->conn->prepare("UPDATE announcements SET title=?, message=? WHERE id=?");
         $stmt->bind_param('ssi', $title, $message, $id);
@@ -60,9 +58,9 @@ class AnnouncementSubject {
         $this->notify('Announcement Updated', ['title' => $title, 'message' => $message]);
     }
 
-    // Delete announcement and notify observers
+
     public function deleteAnnouncement($id) {
-        // Optional: Fetch title before deletion for logging
+        
         $res = $this->conn->query("SELECT title FROM announcements WHERE id=$id");
         $row = $res->fetch_assoc();
         $title = $row['title'] ?? '';
@@ -76,18 +74,18 @@ class AnnouncementSubject {
     }
 }
 
-// --- Access Control ---
+// 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: login.php');
     exit();
 }
 
-// --- Instantiate Subject and attach Observer(s) ---
+
 $announcementSubject = new AnnouncementSubject($conn);
 $logger = new Logger();
 $announcementSubject->attach($logger);
 
-// --- Handle Form Submissions ---
+
 if (isset($_POST['add_announcement'])) {
     $title = $conn->real_escape_string($_POST['title']);
     $message = $conn->real_escape_string($_POST['message']);
@@ -122,7 +120,6 @@ if (isset($_POST['edit_announcement'])) {
     exit();
 }
 
-// Fetch all announcements for display
 $announcements = $conn->query("SELECT * FROM announcements ORDER BY created_at DESC");
 ?>
 
